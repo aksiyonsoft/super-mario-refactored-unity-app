@@ -1,0 +1,23 @@
+# Bu workflow'u GitHub'da MANUEL bir kez çalıştırın (Actions → Activation → Run workflow).
+# Oluşan .alf license dosyasını indirip UNITY_LICENSE secret olarak ekleyin.
+# Detay: https://game.ci/docs/github/activation
+
+name: Acquire Unity Activation File
+
+on:
+  workflow_dispatch:
+
+jobs:
+  activation:
+    name: Generate activation file
+    runs-on: ubuntu-latest
+    steps:
+      - uses: game-ci/unity-activate@v4
+        id: activate
+        with:
+          unityVersion: 6000.3.8f1
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Unity-Activation-File
+          path: ${{ steps.activate.outputs.file }}

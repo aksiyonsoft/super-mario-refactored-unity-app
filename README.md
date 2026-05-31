@@ -99,13 +99,46 @@ Assets/
 
 ## Test ve CI/CD
 
-**Yerel test:**
+### Testleri Unity Editor'da çalıştırma
 
-```
-Window → General → Test Runner → EditMode / PlayMode → Run All
+1. Unity Hub ile projeyi **6000.3.8f1** sürümünde açın.
+2. Üst menüden **Window → General → Test Runner** penceresini açın.
+3. Sekmeler:
+   - **EditMode** — sahne açmadan çalışan testler (`GameManagerTests`, `ExtensionsTests`)
+   - **PlayMode** — oyun simülasyonu gerektiren testler (`PlayerMovementTests`)
+4. İlgili sekmede **Run All** butonuna tıklayın.
+5. Yeşil tik = geçti, kırmızı X = başarısız. Detay için test satırına çift tıklayın.
+
+**Tek bir test çalıştırmak:** Test Runner listesinde test adına sağ tık → **Run**.
+
+**Komut satırı (opsiyonel):**
+
+```bash
+# Unity kurulu path'inize göre düzenleyin
+Unity.exe -runTests -batchmode -projectPath . -testResults TestResults.xml -testPlatform editmode
 ```
 
-**CI:** `.github/workflows/ci.yml` — her push'ta EditMode testleri. Cloud build için GitHub repo'ya `UNITY_LICENSE` secret ekleyin. Detaylar: [CONTRIBUTING.md](CONTRIBUTING.md)
+### GitHub Actions (CI)
+
+Workflow dosyaları:
+
+| Dosya | Görev |
+|-------|-------|
+| [`.github/workflows/ci.yml`](.github/workflows/ci.yml) | EditMode + PlayMode testleri |
+| [`.github/workflows/build.yml`](.github/workflows/build.yml) | Windows build |
+| [`.github/workflows/activation.yml`](.github/workflows/activation.yml) | Unity lisans aktivasyonu (tek seferlik) |
+
+**CI'ın çalışması için GitHub repo secret'ları gerekir:**
+
+1. GitHub → repo → **Settings → Secrets and variables → Actions**
+2. **Actions → Activation → Run workflow** ile `activation.yml` çalıştırın
+3. Oluşan `.alf` dosyasını indirin
+4. Secret ekleyin: `UNITY_LICENSE` = `.alf` dosyasının **tüm içeriği**
+5. (Opsiyonel) `UNITY_EMAIL` ve `UNITY_PASSWORD` — Unity hesabınız
+
+Secret'lar tanımlandıktan sonra her `main` / `develop` push'unda ve PR'da testler otomatik koşar.
+
+Detaylı kurulum: [Game CI — GitHub Activation](https://game.ci/docs/github/activation) · [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ---
 

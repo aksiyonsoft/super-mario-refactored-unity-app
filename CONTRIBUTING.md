@@ -25,7 +25,19 @@
 
 ## CI
 
-GitHub Actions uses [Game CI](https://game.ci/). Add a `UNITY_LICENSE` repository secret for cloud builds. See [Unity activation docs](https://game.ci/docs/github/activation).
+GitHub Actions uses [Game CI](https://game.ci/). Workflows:
+
+- `ci.yml` — EditMode and PlayMode tests on push/PR
+- `build.yml` — Windows standalone build on `main`
+- `activation.yml` — one-time Unity license file generation (manual dispatch)
+
+### One-time GitHub setup
+
+1. Run **Actions → Acquire Unity Activation File → Run workflow**
+2. Download the artifact and copy its contents into repo secret **`UNITY_LICENSE`**
+3. Optionally add **`UNITY_EMAIL`** and **`UNITY_PASSWORD`**
+
+See [Unity activation docs](https://game.ci/docs/github/activation).
 
 ## Code conventions
 
