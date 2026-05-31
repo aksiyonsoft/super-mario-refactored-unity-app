@@ -32,3 +32,15 @@ GitHub Actions uses [Game CI](https://game.ci/). Add a `UNITY_LICENSE` repositor
 - Scripts live under `Assets/Scripts/` with namespaces `SuperMario.*`
 - Gameplay events go through `SuperMario.Core.GameEvents` instead of direct singleton calls
 - Keep `.meta` files with moved assets to preserve GUID references
+
+---
+
+## Proje Sahibi
+
+| | |
+|---|---|
+| **Organizasyon** | [Aksiyonsoft](https://github.com/aksiyonsoft) |
+| **Proje sorumlusu** | [Yusuf Bozkurt](https://github.com/bbozkurtyusuf) |
+| **Repository** | [aksiyonsoft/super-mario-refactored-unity-app](https://github.com/aksiyonsoft/super-mario-refactored-unity-app) |
+
+Bu proje Aksiyonsoft ekibi tarafından geliştirilmiş olup proje yönetimi ve teslimi Yusuf Bozkurt tarafından yürütülmüştür. Atıf detayları için [CREDITS.md](CREDITS.md) dosyasına bakın.
