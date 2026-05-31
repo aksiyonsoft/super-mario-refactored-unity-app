@@ -12,9 +12,19 @@ namespace SuperMario.Core
         private InputAction enterPipeAction;
 
         public float Horizontal => moveAction?.ReadValue<float>() ?? Input.GetAxis("Horizontal");
-        public bool JumpPressed => jumpAction?.WasPressedThisFrame() ?? Input.GetButtonDown("Jump");
-        public bool JumpHeld => jumpAction?.IsPressed() ?? Input.GetButton("Jump");
+        public bool JumpPressed => jumpAction?.WasPressedThisFrame() ?? LegacyJumpPressed;
+        public bool JumpHeld => jumpAction?.IsPressed() ?? LegacyJumpHeld;
         public bool EnterPipeHeld => enterPipeAction?.IsPressed() ?? Input.GetKey(KeyCode.S);
+
+        private static bool LegacyJumpPressed =>
+            Input.GetButtonDown("Jump") ||
+            Input.GetKeyDown(KeyCode.W) ||
+            Input.GetKeyDown(KeyCode.UpArrow);
+
+        private static bool LegacyJumpHeld =>
+            Input.GetButton("Jump") ||
+            Input.GetKey(KeyCode.W) ||
+            Input.GetKey(KeyCode.UpArrow);
 
         private void Awake()
         {

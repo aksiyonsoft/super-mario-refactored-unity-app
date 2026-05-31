@@ -63,6 +63,10 @@ namespace SuperMario.Player
 
         private void Update()
         {
+            if (PauseManager.IsPaused) {
+                return;
+            }
+
             HorizontalMovement();
 
             grounded = rb.Raycast(Vector2.down);
@@ -76,6 +80,10 @@ namespace SuperMario.Player
 
         private void FixedUpdate()
         {
+            if (PauseManager.IsPaused) {
+                return;
+            }
+
             Vector2 position = rb.position;
             position += velocity * Time.fixedDeltaTime;
 

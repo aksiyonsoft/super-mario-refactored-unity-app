@@ -84,6 +84,22 @@
                 },
                 {
                     "name": "",
+                    "id": "f1a2b3c4-d5e6-7890-abcd-ef1234567890a",
+                    "path": "<Keyboard>/w",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a2b3c4d5-e6f7-8901-bcde-f1234567890ab",
+                    "path": "<Keyboard>/upArrow",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "e1f2a3b4-c5d6-7890-4567-901234567890",
                     "path": "<Keyboard>/s",
                     "action": "EnterPipe",
