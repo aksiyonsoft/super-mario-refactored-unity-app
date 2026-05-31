@@ -8,7 +8,6 @@ namespace SuperMario.Level
     public class Pipe : MonoBehaviour
     {
         public Transform connection;
-        public KeyCode enterKeyCode = KeyCode.S;
         public Vector3 enterDirection = Vector3.down;
         public Vector3 exitDirection = Vector3.zero;
 
@@ -18,15 +17,14 @@ namespace SuperMario.Level
         private void Awake()
         {
             sideScrollingCamera = Camera.main.GetComponent<SideScrollingCamera>();
-            inputReader = FindAnyObjectByType<InputReader>();
+            inputReader = InputReader.Instance ?? FindAnyObjectByType<InputReader>();
         }
 
         private void OnTriggerStay2D(Collider2D other)
         {
             if (connection != null && other.CompareTag("Player"))
             {
-                bool enterPipe = inputReader != null ? inputReader.EnterPipeHeld : Input.GetKey(enterKeyCode);
-                if (enterPipe && other.TryGetComponent(out MarioPlayer player)) {
+                if (inputReader != null && inputReader.EnterPipeHeld && other.TryGetComponent(out MarioPlayer player)) {
                     StartCoroutine(Enter(player));
                 }
             }

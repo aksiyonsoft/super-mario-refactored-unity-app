@@ -35,7 +35,7 @@ namespace SuperMario.Player
             mainCamera = Camera.main;
             rb = GetComponent<Rigidbody2D>();
             capsuleCollider = GetComponent<Collider2D>();
-            inputReader = FindAnyObjectByType<InputReader>();
+            inputReader = InputReader.Instance ?? FindAnyObjectByType<InputReader>();
 
             if (config != null) {
                 moveSpeed = config.moveSpeed;
@@ -96,7 +96,7 @@ namespace SuperMario.Player
 
         private void HorizontalMovement()
         {
-            inputAxis = inputReader != null ? inputReader.Horizontal : Input.GetAxis("Horizontal");
+            inputAxis = inputReader != null ? inputReader.Horizontal : 0f;
             velocity.x = Mathf.MoveTowards(velocity.x, inputAxis * moveSpeed, moveSpeed * Time.deltaTime);
 
             if (rb.Raycast(Vector2.right * velocity.x)) {
@@ -115,7 +115,7 @@ namespace SuperMario.Player
             velocity.y = Mathf.Max(velocity.y, 0f);
             jumping = velocity.y > 0f;
 
-            if (inputReader != null ? inputReader.JumpPressed : Input.GetButtonDown("Jump"))
+            if (inputReader != null && inputReader.JumpPressed)
             {
                 velocity.y = jumpForce;
                 jumping = true;
@@ -124,7 +124,7 @@ namespace SuperMario.Player
 
         private void ApplyGravity()
         {
-            bool jumpHeld = inputReader != null ? inputReader.JumpHeld : Input.GetButton("Jump");
+            bool jumpHeld = inputReader != null && inputReader.JumpHeld;
             bool falling = velocity.y < 0f || !jumpHeld;
             float multiplier = falling ? 2f : 1f;
 

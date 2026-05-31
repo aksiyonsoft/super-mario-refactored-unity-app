@@ -6,13 +6,20 @@ namespace SuperMario.Core
     {
         public static bool IsPaused { get; private set; }
 
+        private InputReader inputReader;
+
+        private void Awake()
+        {
+            inputReader = InputReader.Instance ?? FindAnyObjectByType<InputReader>();
+        }
+
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Escape)) {
+            if (inputReader != null && inputReader.PausePressed) {
                 TogglePause();
             }
 
-            if (IsPaused && Input.GetMouseButtonDown(0)) {
+            if (IsPaused && inputReader != null && inputReader.ResumeClicked) {
                 Resume();
             }
         }
