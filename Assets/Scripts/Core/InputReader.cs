@@ -8,7 +8,8 @@ namespace SuperMario.Core
     {
         public static InputReader Instance { get; private set; }
 
-        public InputActionAsset inputActions;
+        private InputActionAsset inputActions;
+        private bool ownsInputActions;
 
         private InputAction moveAction;
         private InputAction jumpAction;
@@ -32,19 +33,35 @@ namespace SuperMario.Core
             }
 
             Instance = this;
+            CreateInputActions();
+        }
 
-            if (inputActions == null) {
-                Debug.LogError("InputReader: PlayerControls InputActionAsset is not assigned.");
-                return;
-            }
+        private void CreateInputActions()
+        {
+            inputActions = ScriptableObject.CreateInstance<InputActionAsset>();
+            ownsInputActions = true;
 
-            var playerMap = inputActions.FindActionMap("Player");
-            var gameMap = inputActions.FindActionMap("Game");
+            var playerMap = inputActions.AddActionMap("Player");
 
-            moveAction = playerMap.FindAction("Move");
-            jumpAction = playerMap.FindAction("Jump");
-            enterPipeAction = playerMap.FindAction("EnterPipe");
-            pauseAction = gameMap.FindAction("Pause");
+            moveAction = playerMap.AddAction("Move", InputActionType.Value);
+            moveAction.AddCompositeBinding("1DAxis")
+                .With("Negative", "<Keyboard>/a")
+                .With("Positive", "<Keyboard>/d");
+            moveAction.AddCompositeBinding("1DAxis")
+                .With("Negative", "<Keyboard>/leftArrow")
+                .With("Positive", "<Keyboard>/rightArrow");
+
+            jumpAction = playerMap.AddAction("Jump", InputActionType.Button);
+            jumpAction.AddBinding("<Keyboard>/space");
+            jumpAction.AddBinding("<Keyboard>/w");
+            jumpAction.AddBinding("<Keyboard>/upArrow");
+
+            enterPipeAction = playerMap.AddAction("EnterPipe", InputActionType.Button);
+            enterPipeAction.AddBinding("<Keyboard>/s");
+
+            var gameMap = inputActions.AddActionMap("Game");
+            pauseAction = gameMap.AddAction("Pause", InputActionType.Button);
+            pauseAction.AddBinding("<Keyboard>/escape");
         }
 
         private void OnEnable()
@@ -61,6 +78,10 @@ namespace SuperMario.Core
         {
             if (Instance == this) {
                 Instance = null;
+            }
+
+            if (ownsInputActions && inputActions != null) {
+                Destroy(inputActions);
             }
         }
     }
