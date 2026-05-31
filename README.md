@@ -128,15 +128,20 @@ Workflow dosyaları:
 | [`.github/workflows/build.yml`](.github/workflows/build.yml) | Windows build |
 | [`.github/workflows/activation.yml`](.github/workflows/activation.yml) | Unity lisans aktivasyonu (tek seferlik) |
 
-**CI'ın çalışması için GitHub repo secret'ları gerekir:**
+**CI'ın çalışması için GitHub repo secret'ı gerekir:**
 
-1. GitHub → repo → **Settings → Secrets and variables → Actions**
-2. **Actions → Activation → Run workflow** ile `activation.yml` çalıştırın
-3. Oluşan `.alf` dosyasını indirin
-4. Secret ekleyin: `UNITY_LICENSE` = `.alf` dosyasının **tüm içeriği**
-5. (Opsiyonel) `UNITY_EMAIL` ve `UNITY_PASSWORD` — Unity hesabınız
+1. GitHub → repo → **Settings → Secrets and variables → Actions → New repository secret**
+2. Name: `UNITY_LICENSE`
+3. Value: `Unity_v6000.3.8f1.alf` dosyasının **tüm içeriğini** yapıştırın (tek satır base64 metin)
+4. (Opsiyonel) `UNITY_EMAIL` ve `UNITY_PASSWORD` — Unity hesabınız
 
-Secret'lar tanımlandıktan sonra her `main` / `develop` push'unda ve PR'da testler otomatik koşar.
+> **Önemli:** `.alf` dosyasını repoya commit etmeyin. `.gitignore` ile engellenmiştir.
+
+**Secret yoksa:** CI kırmızı patlamaz — `Project Structure Check` yeşil geçer, Unity test/build adımları sarı uyarı ile atlanır.
+
+**Secret varsa:** EditMode, PlayMode testleri ve Windows build otomatik koşar.
+
+Alternatif: **Actions → Acquire Unity Activation File** workflow'unu bir kez çalıştırıp artifact'tan `.alf` indirebilirsiniz.
 
 Detaylı kurulum: [Game CI — GitHub Activation](https://game.ci/docs/github/activation) · [CONTRIBUTING.md](CONTRIBUTING.md)
 

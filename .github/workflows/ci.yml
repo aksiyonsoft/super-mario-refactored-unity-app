@@ -11,9 +11,28 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+
 jobs:
+  project-check:
+    name: Project Structure Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify Unity project files
+        run: |
+          test -f ProjectSettings/ProjectVersion.txt
+          test -f Packages/manifest.json
+          test -f Assets/Scripts/SuperMario.Runtime.asmdef
+          test -f Assets/_Project/Scenes/Worlds/1-1.unity
+          echo "Unity project structure OK"
+
   editmode-tests:
     name: EditMode Tests
+    needs: project-check
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -22,10 +41,21 @@ jobs:
         with:
           lfs: true
 
+      - name: Check Unity license secret
+        id: license
+        run: |
+          if [ -z "$UNITY_LICENSE" ]; then
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::UNITY_LICENSE secret is empty. Skipping EditMode tests."
+            echo "Add the contents of your .alf file as the UNITY_LICENSE repository secret."
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Run EditMode tests
+        if: steps.license.outputs.configured == 'true'
         uses: game-ci/unity-test-runner@v4
         env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
@@ -35,14 +65,15 @@ jobs:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload EditMode results
+        if: always() && steps.license.outputs.configured == 'true'
         uses: actions/upload-artifact@v4
-        if: always()
         with:
           name: EditMode-test-results
           path: artifacts
 
   playmode-tests:
     name: PlayMode Tests
+    needs: project-check
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -51,10 +82,20 @@ jobs:
         with:
           lfs: true
 
+      - name: Check Unity license secret
+        id: license
+        run: |
+          if [ -z "$UNITY_LICENSE" ]; then
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::UNITY_LICENSE secret is empty. Skipping PlayMode tests."
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Run PlayMode tests
+        if: steps.license.outputs.configured == 'true'
         uses: game-ci/unity-test-runner@v4
         env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
@@ -64,8 +105,8 @@ jobs:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload PlayMode results
+        if: always() && steps.license.outputs.configured == 'true'
         uses: actions/upload-artifact@v4
-        if: always()
         with:
           name: PlayMode-test-results
           path: artifacts

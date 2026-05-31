@@ -55,6 +55,9 @@ ExportedObj/
 # Unity3D generated file on crash reports
 sysinfo.txt
 
+# Unity license files (never commit — use GitHub UNITY_LICENSE secret instead)
+*.alf
+
 # Builds
 *.apk
 *.aab

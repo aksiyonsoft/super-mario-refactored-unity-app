@@ -6,6 +6,9 @@ on:
     tags: ['v*']
   workflow_dispatch:
 
+env:
+  UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+
 jobs:
   build-windows:
     name: Windows Standalone
@@ -17,10 +20,20 @@ jobs:
         with:
           lfs: true
 
+      - name: Check Unity license secret
+        id: license
+        run: |
+          if [ -z "$UNITY_LICENSE" ]; then
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::UNITY_LICENSE secret is empty. Skipping Windows build."
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Build project
+        if: steps.license.outputs.configured == 'true'
         uses: game-ci/unity-builder@v4
         env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
@@ -30,6 +43,7 @@ jobs:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload build artifact
+        if: steps.license.outputs.configured == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: SuperMario-Windows
