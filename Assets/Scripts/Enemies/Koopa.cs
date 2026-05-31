@@ -1,4 +1,4 @@
-using SuperMario.Player;
+using MarioPlayer = SuperMario.Player.Player;
 using SuperMario.Utilities;
 using UnityEngine;
 
@@ -17,7 +17,7 @@ namespace SuperMario.Enemies
         private SpriteRenderer spriteRenderer;
         private AnimatedSprite animatedSprite;
         private EntityMovement entityMovement;
-        private Rigidbody2D rigidbody;
+        private Rigidbody2D rb;
         private DeathAnimation deathAnimation;
 
         private void Awake()
@@ -25,13 +25,13 @@ namespace SuperMario.Enemies
             spriteRenderer = GetComponent<SpriteRenderer>();
             animatedSprite = GetComponent<AnimatedSprite>();
             entityMovement = GetComponent<EntityMovement>();
-            rigidbody = GetComponent<Rigidbody2D>();
+            rb = GetComponent<Rigidbody2D>();
             deathAnimation = GetComponent<DeathAnimation>();
         }
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            if (!shelled && collision.gameObject.CompareTag("Player") && collision.gameObject.TryGetComponent(out Player player))
+            if (!shelled && collision.gameObject.CompareTag("Player") && collision.gameObject.TryGetComponent(out MarioPlayer player))
             {
                 if (player.starpower) {
                     Hit();
@@ -45,7 +45,7 @@ namespace SuperMario.Enemies
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (shelled && other.CompareTag("Player") && other.TryGetComponent(out Player player))
+            if (shelled && other.CompareTag("Player") && other.TryGetComponent(out MarioPlayer player))
             {
                 if (!pushed)
                 {
@@ -80,7 +80,7 @@ namespace SuperMario.Enemies
         {
             pushed = true;
 
-            rigidbody.bodyType = RigidbodyType2D.Dynamic;
+            rb.bodyType = RigidbodyType2D.Dynamic;
 
             entityMovement.direction = direction.normalized;
             entityMovement.speed = shellSpeed;

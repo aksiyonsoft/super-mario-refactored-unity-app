@@ -1,6 +1,6 @@
 using System.Collections;
 using SuperMario.Core;
-using SuperMario.Player;
+using MarioPlayer = SuperMario.Player.Player;
 using UnityEngine;
 
 namespace SuperMario.Level
@@ -16,14 +16,14 @@ namespace SuperMario.Level
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.CompareTag("Player") && other.TryGetComponent(out Player player))
+            if (other.CompareTag("Player") && other.TryGetComponent(out MarioPlayer player))
             {
                 StartCoroutine(MoveTo(flag, poleBottom.position));
                 StartCoroutine(LevelCompleteSequence(player));
             }
         }
 
-        private IEnumerator LevelCompleteSequence(Player player)
+        private IEnumerator LevelCompleteSequence(MarioPlayer player)
         {
             player.movement.enabled = false;
 

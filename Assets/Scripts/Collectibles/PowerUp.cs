@@ -1,5 +1,5 @@
 using SuperMario.Core;
-using SuperMario.Player;
+using MarioPlayer = SuperMario.Player.Player;
 using UnityEngine;
 
 namespace SuperMario.Collectibles
@@ -18,12 +18,12 @@ namespace SuperMario.Collectibles
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.CompareTag("Player") && other.TryGetComponent(out Player player)) {
+            if (other.CompareTag("Player") && other.TryGetComponent(out MarioPlayer player)) {
                 Collect(player);
             }
         }
 
-        private void Collect(Player player)
+        private void Collect(MarioPlayer player)
         {
             switch (type)
             {

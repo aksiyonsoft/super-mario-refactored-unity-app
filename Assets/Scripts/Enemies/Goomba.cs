@@ -1,4 +1,4 @@
-using SuperMario.Player;
+using MarioPlayer = SuperMario.Player.Player;
 using SuperMario.Utilities;
 using UnityEngine;
 
@@ -10,14 +10,14 @@ namespace SuperMario.Enemies
 
         public Sprite flatSprite;
 
-        private Collider2D collider2D;
+        private Collider2D hitCollider;
         private EntityMovement entityMovement;
         private AnimatedSprite animatedSprite;
         private SpriteRenderer spriteRenderer;
 
         private void Awake()
         {
-            collider2D = GetComponent<Collider2D>();
+            hitCollider = GetComponent<Collider2D>();
             entityMovement = GetComponent<EntityMovement>();
             animatedSprite = GetComponent<AnimatedSprite>();
             spriteRenderer = GetComponent<SpriteRenderer>();
@@ -25,7 +25,7 @@ namespace SuperMario.Enemies
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            if (collision.gameObject.CompareTag("Player") && collision.gameObject.TryGetComponent(out Player player))
+            if (collision.gameObject.CompareTag("Player") && collision.gameObject.TryGetComponent(out MarioPlayer player))
             {
                 if (player.starpower) {
                     Hit();
@@ -46,7 +46,7 @@ namespace SuperMario.Enemies
 
         private void Flatten()
         {
-            collider2D.enabled = false;
+            hitCollider.enabled = false;
             entityMovement.enabled = false;
             animatedSprite.enabled = false;
             spriteRenderer.sprite = flatSprite;

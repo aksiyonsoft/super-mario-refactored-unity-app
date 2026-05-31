@@ -1,6 +1,6 @@
 using System.Collections;
 using SuperMario.Core;
-using SuperMario.Player;
+using MarioPlayer = SuperMario.Player.Player;
 using UnityEngine;
 
 namespace SuperMario.Level
@@ -26,13 +26,13 @@ namespace SuperMario.Level
             if (connection != null && other.CompareTag("Player"))
             {
                 bool enterPipe = inputReader != null ? inputReader.EnterPipeHeld : Input.GetKey(enterKeyCode);
-                if (enterPipe && other.TryGetComponent(out Player player)) {
+                if (enterPipe && other.TryGetComponent(out MarioPlayer player)) {
                     StartCoroutine(Enter(player));
                 }
             }
         }
 
-        private IEnumerator Enter(Player player)
+        private IEnumerator Enter(MarioPlayer player)
         {
             player.movement.enabled = false;
 
