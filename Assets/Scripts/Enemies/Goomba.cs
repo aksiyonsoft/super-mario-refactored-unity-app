@@ -6,8 +6,6 @@ namespace SuperMario.Enemies
 {
     public class Goomba : MonoBehaviour
     {
-        private static readonly int ShellLayer = LayerMask.NameToLayer("Shell");
-
         public Sprite flatSprite;
 
         private Collider2D hitCollider;
@@ -17,6 +15,7 @@ namespace SuperMario.Enemies
 
         private void Awake()
         {
+            GameLayers.EnsureInitialized();
             hitCollider = GetComponent<Collider2D>();
             entityMovement = GetComponent<EntityMovement>();
             animatedSprite = GetComponent<AnimatedSprite>();
@@ -39,7 +38,7 @@ namespace SuperMario.Enemies
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.gameObject.layer == ShellLayer) {
+            if (other.gameObject.layer == GameLayers.Shell) {
                 Hit();
             }
         }

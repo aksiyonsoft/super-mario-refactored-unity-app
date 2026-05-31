@@ -7,9 +7,6 @@ namespace SuperMario.Player
     [RequireComponent(typeof(Rigidbody2D))]
     public class PlayerMovement : MonoBehaviour
     {
-        private static readonly int EnemyLayer = LayerMask.NameToLayer("Enemy");
-        private static readonly int PowerUpLayer = LayerMask.NameToLayer("PowerUp");
-
         public PlayerConfig config;
 
         private Camera mainCamera;
@@ -34,6 +31,7 @@ namespace SuperMario.Player
 
         private void Awake()
         {
+            GameLayers.EnsureInitialized();
             mainCamera = Camera.main;
             rb = GetComponent<Rigidbody2D>();
             capsuleCollider = GetComponent<Collider2D>();
@@ -128,7 +126,7 @@ namespace SuperMario.Player
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            if (collision.gameObject.layer == EnemyLayer)
+            if (collision.gameObject.layer == GameLayers.Enemy)
             {
                 if (transform.DotTest(collision.transform, Vector2.down))
                 {
@@ -136,7 +134,7 @@ namespace SuperMario.Player
                     jumping = true;
                 }
             }
-            else if (collision.gameObject.layer != PowerUpLayer)
+            else if (collision.gameObject.layer != GameLayers.PowerUp)
             {
                 if (transform.DotTest(collision.transform, Vector2.up)) {
                     velocity.y = 0f;

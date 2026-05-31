@@ -6,8 +6,6 @@ namespace SuperMario.Enemies
 {
     public class Koopa : MonoBehaviour
     {
-        private static readonly int ShellLayer = LayerMask.NameToLayer("Shell");
-
         public Sprite shellSprite;
         public float shellSpeed = 12f;
 
@@ -22,6 +20,7 @@ namespace SuperMario.Enemies
 
         private void Awake()
         {
+            GameLayers.EnsureInitialized();
             spriteRenderer = GetComponent<SpriteRenderer>();
             animatedSprite = GetComponent<AnimatedSprite>();
             entityMovement = GetComponent<EntityMovement>();
@@ -61,7 +60,7 @@ namespace SuperMario.Enemies
                     }
                 }
             }
-            else if (!shelled && other.gameObject.layer == ShellLayer)
+            else if (!shelled && other.gameObject.layer == GameLayers.Shell)
             {
                 Hit();
             }
@@ -86,7 +85,7 @@ namespace SuperMario.Enemies
             entityMovement.speed = shellSpeed;
             entityMovement.enabled = true;
 
-            gameObject.layer = ShellLayer;
+            gameObject.layer = GameLayers.Shell;
         }
 
         private void Hit()
